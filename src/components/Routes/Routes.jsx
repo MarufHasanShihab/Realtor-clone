@@ -5,6 +5,7 @@ import Signin from "../../pages/Signin/Signin";
 import Signup from "../../pages/Signup/Signup";
 import Profile from "../../pages/Profile/Profile"
 import Offers from "../../pages/Offers/Offers";
+import Forgetpassword from "../../pages/Forgetpassword/Forgetpassword";
 
 const router = createBrowserRouter([
     {
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
             {
                 path: "sign-up",
                 element: <Signup/>
+            },
+            {
+                path: "forget-password",
+                element: <Forgetpassword/>
             },
             {
                 path: "profile",
