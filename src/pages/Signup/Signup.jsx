@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import OAuth from "../../components/OAuth/OAuth";
 
 const Signup = () => {
+  const [name, setName] = useState("")
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -24,9 +25,9 @@ const Signup = () => {
         <div className="w-full md:w-[67%] lg:w-[40%] lg:ml-20">
           <form action="">
             <input
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => setName(e.target.value)}
               type="text"
-              value={email}
+              value={name}
               className="w-full px-4 py-2 text-xl text-gray-700 bg-white border-gray-300 rounded transition ease-in-out mb-6"
               placeholder="Full name"
             />
@@ -56,9 +57,6 @@ const Signup = () => {
               <p>
               Have an account?
               <Link to="/sign-in" className="text-red-600 hover:text-red-700 transition duration-200 ease-in-out ml-1">Sign in</Link>
-              </p>
-              <p>
-                <Link to="/forget-password" className="text-blue-600 hover:text-blue-700 transition duration-200 ease-in-out">Forget Password?</Link>
               </p>
             </div>
             <button type="submit" className="w-full bg-blue-600 px-6 py-3 text-white text-sm font-medium uppercase rounded-[4px] mb-6 shadow-md hover:bg-blue-700 transition duration-150 ease-in-out hover:shadow-lg active:bg-blue-800">Sign Up</button>
