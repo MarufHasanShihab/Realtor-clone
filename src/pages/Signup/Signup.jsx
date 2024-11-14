@@ -1,16 +1,45 @@
 import { useState } from "react";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import OAuth from "../../components/OAuth/OAuth";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import {auth, db} from "../../config/firebase.config"
+import { doc, serverTimestamp, setDoc } from "firebase/firestore";
+import { toast } from "react-toastify";
 
 const Signup = () => {
   const [name, setName] = useState("")
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate()
 
+  // handle form submit
+  const onSubmit = async e =>{
+    e.preventDefault();
+    // password validation
+    if(password.length < 6){
+      toast.error("password must be at least 6 characters")
+      return
+    }
+    try {
+      const userCradential = await createUserWithEmailAndPassword(auth, email,password);
+      updateProfile(auth.currentUser,{
+        displayName: name
+      })
+      const formData = {name,email,password};
+      delete formData.password;
+      formData.timestamp = serverTimestamp();
+      await setDoc(doc(db,"users",userCradential.user.uid),formData);
+      navigate("/");
+      toast.success("sign up was successfully!")
+      
+    } catch (error) {
+      toast.error(error.code.split("/")[1].split("-").join(" "))
+    }
+  
 
-
+  }
   return (
     <section>
       <h1 className="text-3xl text-center mt-6 font-bold">Sign Up</h1>
@@ -23,13 +52,14 @@ const Signup = () => {
           />
         </div>
         <div className="w-full md:w-[67%] lg:w-[40%] lg:ml-20">
-          <form action="">
+          <form onSubmit={onSubmit}>
             <input
               onChange={(e) => setName(e.target.value)}
               type="text"
               value={name}
               className="w-full px-4 py-2 text-xl text-gray-700 bg-white border-gray-300 rounded transition ease-in-out mb-6"
               placeholder="Full name"
+              required
             />
             <input
               onChange={(e) => setEmail(e.target.value)}
@@ -37,6 +67,7 @@ const Signup = () => {
               value={email}
               className="w-full px-4 py-2 text-xl text-gray-700 bg-white border-gray-300 rounded transition ease-in-out mb-6"
               placeholder="Email address"
+              required
             />
             <div className="relative mb-6">
               <input
@@ -45,6 +76,7 @@ const Signup = () => {
                 value={password}
                 className="w-full px-4 py-2 text-xl text-gray-700 bg-white border-gray-300 rounded transition ease-in-out"
                 placeholder="Password"
+                required
               />
               <div
                 className="absolute right-3 top-3 text-xl cursor-pointer"
