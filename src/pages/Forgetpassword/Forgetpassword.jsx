@@ -1,9 +1,23 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import OAuth from "../../components/OAuth/OAuth";
+import { toast } from "react-toastify";
+import { sendPasswordResetEmail } from "firebase/auth";
+import { auth } from "../../config/firebase.config";
 
 const Forgetpassword = () => {
   const [email, setEmail] = useState("");
+  // handle form submit
+  const onSubmit = async e =>{
+    e.preventDefault();
+    try {
+        await sendPasswordResetEmail(auth,email);
+      toast.success("Check your email and set new password");
+      setEmail("")
+    } catch (error) {
+      toast.error(error.code.split("/")[1].split("-").join(" "));
+    }
+  }
   return (
     <section>
       <h1 className="text-3xl text-center mt-6 font-bold">Forget Password</h1>
@@ -16,7 +30,7 @@ const Forgetpassword = () => {
           />
         </div>
         <div className="w-full md:w-[67%] lg:w-[40%] lg:ml-20">
-          <form action="">
+          <form onSubmit={onSubmit}>
             <input
               onChange={(e) => setEmail(e.target.value)}
               type="email"
@@ -30,7 +44,7 @@ const Forgetpassword = () => {
               </p>
               
               <p>
-                <Link to="/forget-password" className="text-blue-600 hover:text-blue-700 transition duration-200 ease-in-out">
+                <Link to="/sign-in" className="text-blue-600 hover:text-blue-700 transition duration-200 ease-in-out">
                 Sign in instead</Link>
               </p>
             </div>
